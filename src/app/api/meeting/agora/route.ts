@@ -1,0 +1,34 @@
+// /app/api/meetings/[id]/route.ts
+import { RtcRole, RtcTokenBuilder } from "agora-access-token";
+import { NextResponse } from "next/server";
+
+export async function POST(req: Request) {
+  try {
+    const { channelName, date }: { channelName: string; date: string } =
+      await req.json();
+
+    const agoraAppId = process.env.AGORA_APP_ID || "";
+    const agoraAppCertificate = process.env.AGORA_APP_CERTIFICATE || "";
+
+    const startDateObject = new Date(date);
+    const expirationTimeInSeconds =
+      Math.floor(startDateObject.getTime() / 1000) + 86400;
+
+    const token = RtcTokenBuilder.buildTokenWithUid(
+      agoraAppId,
+      agoraAppCertificate,
+      channelName,
+      Math.floor(Math.random() * 100),
+      RtcRole.PUBLISHER,
+      expirationTimeInSeconds
+    );
+
+    return NextResponse.json({ token }, { status: 200 });
+  } catch (error) {
+    console.error("Error generating Agora token:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
