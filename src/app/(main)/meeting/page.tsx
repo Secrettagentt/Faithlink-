@@ -1,112 +1,85 @@
 "use client";
 
-import AgoraUIKit from "agora-react-uikit";
-import { useEffect } from "react";
-// import { Tooltip } from "antd";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
-function AgoraUIVideoPlayer({
-  token,
-  channelName,
-  setJoined,
-  setLoading,
-  agoraAppId,
-}: any) {
-  const currentActiveUserId = localStorage.getItem("currentActiveUserId") || "";
-  const random = (Math.random() * 16) | 0;
+interface Meeting {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+}
 
-  const rtcProps = {
-    appId: "5a5002f3414c4eae81fa2acef8bfa795",
-    channel: "Testing",
-    token: `007eJxTYLjD/2iSwIxOC9VtgpKhTpe3cpofOzR/f/McDz5nlzfLyuoVGEwTTQ0MjNKMTQxNkk1SE1MtDNMSjRKTU9MsktISzS1Nc3xi0hsCGRm2BM5lZGSAQBCfnSEktbgkMy+dgQEAWDIfyQ==`,
-    uid: random,
-  };
-
-  const callbacks = {
-    EndCall: () => setJoined(false),
-    ["connection-state-change"](curState: any, _: any, reason: any): void {
-      if (curState === "DISCONNECTED") {
-        setJoined(false);
-        setLoading(false);
-        console.error("Connection error: ", reason);
-      }
-      if (curState === "CONNECTED") {
-        setLoading(false);
-        console.info("Connected successfully!");
-      }
-    },
-  };
-
-  const customButton = {
-    borderRadius: "50%",
-    backgroundColor: "#1F2937",
-    border: "2px solid #4F46E5",
-    color: "#FFF",
-    padding: "10px",
-    cursor: "pointer",
-    transition: "0.3s ease",
-  };
-
-  const styleProps = {
-    theme: "#FFFFFF",
-    UIKitContainer: { background: "#1F2937" },
-    localControlStyles: {
-      bottom: 0,
-      height: "80px",
-      backgroundColor: "#1F2937",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: "15px",
-    },
-    btnStyles: customButton,
-    localBtnStyles: {
-      muteLocalAudio: customButton,
-      muteLocalVideo: customButton,
-      switchCamera: customButton,
-      endCall: {
-        ...customButton,
-        backgroundColor: "#EF4444",
-        border: "2px solid #B91C1C",
-      },
-    },
-  };
+export default function MeetingListPage() {
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    // Handle any additional setup or cleanup
-    // return () => {
-    //   setJoined(false); // Reset the joined state when component unmounts
-    // };
-  }, [setJoined]);
+    const fetchMeetings = async () => {
+      try {
+        // Simulating API call for user-specific meetings
+        const response = await fetch("/api/meetings?createdBy=me");
+        if (!response.ok) throw new Error("Failed to fetch meetings");
+        const data = await response.json();
+        setMeetings(data);
+      } catch (err: any) {
+        setError(err.message || "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMeetings();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      {/* Top Bar */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: "#111827",
-          color: "#FFF",
-          padding: "10px 20px",
-          height: "60px",
-        }}
+    <div className="min-h-screen bg-gradient-to-b from-secondary/30 to-background p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-7xl mx-auto"
       >
-        <h3 style={{ margin: 0 }}>Faith Connect Calls</h3>
-        <div>
-          <span>User: {currentActiveUserId || "Guest"}</span>
-        </div>
-      </div>
-
-      <div className="flex w-full h-[calc(100dvh-60px)]">
-        <AgoraUIKit
-          rtcProps={rtcProps}
-          callbacks={callbacks}
-          styleProps={styleProps}
-        />
-      </div>
+        <h1 className="text-3xl font-bold text-center mb-6">My Meetings</h1>
+        {meetings.length === 0 ? (
+          <p className="text-center text-gray-500">No meetings found</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {meetings.map((meeting) => (
+              <div
+                key={meeting.id}
+                className="bg-card p-4 rounded-lg shadow hover:shadow-lg transition-shadow"
+              >
+                <h2 className="text-lg font-semibold">{meeting.title}</h2>
+                <p className="text-gray-500 text-sm mt-2">
+                  {meeting.description}
+                </p>
+                <p className="text-sm mt-4 text-primary font-medium">
+                  {new Date(meeting.date).toLocaleString()}
+                </p>
+                <Button className="mt-4 w-full bg-primary">View Details</Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 }
-
-export default AgoraUIVideoPlayer;
