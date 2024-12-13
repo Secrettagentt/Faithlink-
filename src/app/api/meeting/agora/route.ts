@@ -4,15 +4,13 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const {
-      channelName,
-      startDate,
-    }: { channelName: string; startDate: string } = await req.json();
+    const { channelName, date }: { channelName: string; date: string } =
+      await req.json();
 
     const agoraAppId = process.env.AGORA_APP_ID || "";
     const agoraAppCertificate = process.env.AGORA_APP_CERTIFICATE || "";
 
-    const startDateObject = new Date(startDate);
+    const startDateObject = new Date(date);
     const expirationTimeInSeconds =
       Math.floor(startDateObject.getTime() / 1000) + 86400;
 
@@ -20,7 +18,7 @@ export async function POST(req: Request) {
       agoraAppId,
       agoraAppCertificate,
       channelName,
-      0, // Assuming 0 as default userId
+      Math.floor(Math.random() * 100),
       RtcRole.PUBLISHER,
       expirationTimeInSeconds
     );

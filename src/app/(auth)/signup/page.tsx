@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { motion } from "framer-motion"
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function SignupPage() {
-  const router = useRouter()
-  const [error, setError] = useState("")
-  const { register, handleSubmit } = useForm()
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
     try {
@@ -19,18 +19,18 @@ export default function SignupPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
-      })
+      });
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message)
+        const error = await response.json();
+        throw new Error(error.message);
       }
 
-      router.push("/login")
+      router.push("/login");
     } catch (error: any) {
-      setError(error.message)
+      setError(error.message);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-secondary/30 to-background">
@@ -84,5 +84,5 @@ export default function SignupPage() {
         </p>
       </motion.div>
     </div>
-  )
+  );
 }

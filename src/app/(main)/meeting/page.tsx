@@ -16,6 +16,21 @@ export default function MeetingListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const handleShareToSocialMedia = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Invite Your Friends",
+          text: "Join me and earn bonuses!",
+          url: "referralLink", // Referral link
+        });
+        console.log("Share successful");
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchMeetings = async () => {
       try {

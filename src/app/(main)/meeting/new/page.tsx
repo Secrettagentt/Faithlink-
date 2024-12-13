@@ -4,8 +4,10 @@ import { useCreateMeeting, useGenerateAgoraToken } from "@/api/meeting";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { localStorageGetItem } from "@/utils/storage-available";
 import { motion } from "framer-motion";
 import moment from "moment";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -15,11 +17,11 @@ export default function CreateMeetingPage() {
   const [success, setSuccess] = useState("");
   const watchMeetingType = watch("schedule", "instant");
 
-    
-    const {createMeeting } = useCreateMeeting()
-    const {generateToken} = useGenerateAgoraToken()
-    
-  
+  const currentActiveUserId = localStorageGetItem("token");
+
+  const { createMeeting, isCreatingMeeting } = useCreateMeeting();
+  const { generateToken, isGeneratingToken } = useGenerateAgoraToken();
+  const router = useRouter();
 
   const onSubmit = async (data: any) => {
     try {
@@ -31,20 +33,29 @@ export default function CreateMeetingPage() {
             : moment(data.date).format("YYYY-MM-DD HH:mm:ss"), // Ensures consistent formatting
       };
 
-          const { title, description, startDate } = data;
+      const { title, date } = data;
 
-          const { token, agoraAppId } = await generateToken(title, startDate);
-          if (token) {
-       const responses = await createMeeting({
-       meetingData,
-         token: token,
-         //   id: uuidv4(),
-         agoraAppId: agoraAppId,
-        //  user: currentActiveUserId,
-       });
-          }
+      const { token, agoraAppId } = await generateToken({
+        channelName: title,
+        date,
+      });
+
+      if (token) {
+        const responses = await createMeeting({
+          ...meetingData,
+          token: token,
+          agoraAppId: agoraAppId,
+        });
+        console.log(responses);
+        // if (data.schedule === "instant" && responses?.id) {
+        //   // Navigate to meeting detail page for instant meeting
+        //   router.push(`/meetings/${responses.id}`);
+        // } else {
+        //   // Navigate to meeting list page for scheduled meeting
+        //   router.push("/meetings");
+        // }
+      }
       // Simulate API call
-      console.log("Meeting Data:", meetingData);
       setSuccess("Meeting created successfully!");
       setError("");
     } catch (error: any) {
@@ -109,7 +120,11 @@ export default function CreateMeetingPage() {
             </div>
           )}
 
-          <Button type="submit" className="w-full bg-primary">
+          <Button
+            loading={isCreatingMeeting || isGeneratingToken}
+            type="submit"
+            className="w-full bg-primary"
+          >
             Create Meeting
           </Button>
         </form>

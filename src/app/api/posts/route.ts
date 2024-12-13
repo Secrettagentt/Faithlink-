@@ -34,8 +34,23 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const cookie = req.headers.get("cookie") || "";
-    const userId = await verifyAccessToken(cookie);
+    console.log(req.headers);
+    const authHeader = req.headers.get("Authorization");
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { message: "Authorization token missing or invalid" },
+        { status: 401 }
+      );
+    }
+
+    // Extract the token
+    const token = authHeader.split(" ")[1];
+    console.log(token);
+    // Verify the token (optional, based on your setup)
+    const userId = await verifyAccessToken(token);
+    console.log(userId);
+
     if (!userId) {
       return NextResponse.json({ message: "Unable to verify access token" });
     } else {

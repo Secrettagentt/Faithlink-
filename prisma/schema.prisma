@@ -8,39 +8,40 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  email         String    @unique
-  password      String
-  image         String?
-  location      String?
-  bio           String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  posts         Post[]
-  comments      Comment[]
-  likes         Like[]
-  followers     Follows[] @relation("following")
-  following     Follows[] @relation("follower")
-  messages      Message[] @relation("UserMessages")
-  receivedMsgs  Message[] @relation("ReceivedMessages")
-  devotionals   Devotional[]
-  testimonies   Testimony[]
-  quizScores    QuizScore[]
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  password     String
+  image        String?
+  location     String?
+  bio          String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  posts        Post[]
+  comments     Comment[]
+  likes        Like[]
+  followers    Follows[]    @relation("following")
+  following    Follows[]    @relation("follower")
+  messages     Message[]    @relation("UserMessages")
+  receivedMsgs Message[]    @relation("ReceivedMessages")
+  devotionals  Devotional[]
+  testimonies  Testimony[]
+  quizScores   QuizScore[]
+  Meeting      Meeting[]
 }
 
 model Post {
-  id          String    @id @default(cuid())
-  content     String
-  mediaUrl    String?
-  mediaType   String?   // image, video
-  category    String    // prayer, worship, testimony, etc.
-  userId      String
-  user        User      @relation(fields: [userId], references: [id])
-  comments    Comment[]
-  likes       Like[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String    @id @default(cuid())
+  content   String
+  mediaUrl  String?
+  mediaType String? // image, video
+  category  String // prayer, worship, testimony, etc.
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  comments  Comment[]
+  likes     Like[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Comment {
@@ -75,14 +76,14 @@ model Follows {
 }
 
 model Message {
-  id          String   @id @default(cuid())
-  content     String
-  senderId    String
-  receiverId  String
-  sender      User     @relation("UserMessages", fields: [senderId], references: [id])
-  receiver    User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  createdAt   DateTime @default(now())
-  read        Boolean  @default(false)
+  id         String   @id @default(cuid())
+  content    String
+  senderId   String
+  receiverId String
+  sender     User     @relation("UserMessages", fields: [senderId], references: [id])
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  createdAt  DateTime @default(now())
+  read       Boolean  @default(false)
 }
 
 model Devotional {
@@ -121,4 +122,15 @@ model QuizScore {
   user      User     @relation(fields: [userId], references: [id])
   quiz      Quiz     @relation(fields: [quizId], references: [id])
   createdAt DateTime @default(now())
+}
+
+model Meeting {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  userId      String
+  date        DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  token       String
 }

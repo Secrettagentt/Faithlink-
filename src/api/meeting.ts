@@ -1,4 +1,5 @@
 import { queryClient } from "@/utils/react-query";
+import { localStorageGetItem } from "@/utils/storage-available";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { endpoints, fetcher, mutator } from "../utils/axios";
@@ -41,12 +42,14 @@ export function useGetMeetingById(id: string) {
 }
 
 export function useCreateMeeting() {
+  const token = localStorageGetItem("token");
   const { mutateAsync, isPending, data } = useMutation<any, any, any>({
     mutationFn: (values: any) =>
       mutator({
         method: "POST",
         url: endpoints.meeting.root,
         data: values,
+        headers: { Authorization: `Bearer ${token}` },
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.meeting.root });
@@ -116,13 +119,13 @@ export function useGenerateAgoraToken() {
   const { mutateAsync, isPending, data } = useMutation<
     any,
     any,
-    { channelName: string; startDate: string | Date }
+    { channelName: string; date: string | Date }
   >({
-    mutationFn: ({ channelName, startDate }) =>
+    mutationFn: ({ channelName, date }) =>
       mutator({
         method: "POST",
-        url: `${endpoints.meeting.root}/agora/token`,
-        data: { channelName, startDate },
+        url: `${endpoints.meeting.root}/agora`,
+        data: { channelName, date },
       }),
   });
 
