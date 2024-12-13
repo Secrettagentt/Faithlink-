@@ -31,4 +31,8 @@ export const queryKeys = {
     root: [{ type: "user" }],
     allUsers: [{ type: "allUsers" }],
   },
+  meeting: {
+    root: [{ type: "meeting" }],
+    id: [{ type: "meetingById" }],
+  },
 };

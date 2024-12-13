@@ -37,4 +37,7 @@ export const endpoints = {
     register: "/users/register",
     all: "/users/all",
   },
+  meeting: {
+    root: "/meeting",
+  },
 };
