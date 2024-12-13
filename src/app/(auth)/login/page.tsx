@@ -1,37 +1,37 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { motion } from "framer-motion"
-import Link from "next/link"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import axios from "axios";
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [error, setError] = useState("")
-  const { register, handleSubmit } = useForm()
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
     try {
-      const result = await signIn("credentials", {
+      const result = await axios.post("/api/auth/signin", {
         email: data.email,
         password: data.password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        setError("Invalid credentials")
-        return
+      });
+      console.log(result);
+      if (!result) {
+        setError("Invalid credentials");
+        return;
       }
 
-      router.push("/feed")
+      router.push("/feed");
     } catch (error) {
-      setError("An error occurred")
+      setError("An error occurred");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-secondary/30 to-background">
@@ -71,5 +71,5 @@ export default function LoginPage() {
         </p>
       </motion.div>
     </div>
-  )
+  );
 }
