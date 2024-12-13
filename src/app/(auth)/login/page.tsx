@@ -9,24 +9,32 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const { register, handleSubmit } = useForm();
+  const { toast } = useToast();
 
   const onSubmit = async (data: any) => {
     try {
-      const result = await axios.post("/api/auth/signin", {
-        email: data.email,
-        password: data.password,
+      const response = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: data.email, password: data.password }),
       });
-      console.log(result);
-      if (!result) {
-        setError("Invalid credentials");
-        return;
+      const responseData = await response.json();
+      if (response.ok) {
+        localStorage.setItem("token", responseData.token);
+        console.log("Sign-in successful:", data);
+      } else {
+        console.error("Error:", data.message);
       }
-
+      toast({
+        title: "Login success",
+        description: "You have successfully login.",
+      });
       router.push("/feed");
     } catch (error) {
       setError("An error occurred");

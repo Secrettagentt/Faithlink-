@@ -34,25 +34,14 @@ export async function POST(req: Request) {
 
     const accessToken = await generateAccessToken(existingUser.id);
 
-    const cookieHeader = cookie.serialize("token", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 30,
-      path: "/",
-      sameSite: "strict",
-    });
-
-    const response = NextResponse.json(
+    return NextResponse.json(
       {
         message: "Sign-in successful",
+        token: accessToken,
         user: { email: existingUser.email, name: existingUser.name },
       },
       { status: 200 }
     );
-
-    response.headers.set("Set-Cookie", cookieHeader);
-
-    return response;
   } catch (error) {
     console.error("Sign-in error:", error);
     return NextResponse.json(
