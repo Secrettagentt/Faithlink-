@@ -32,7 +32,7 @@ export default function LoginPage() {
           title: "Login success",
           description: "You have successfully login.",
         });
-        router.push("/");
+        router.push("/posts");
         refetchUser();
       } else {
         toast({
