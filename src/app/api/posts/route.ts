@@ -7,28 +7,28 @@ import { verifyAccessToken } from "@/lib/token";
 
 export async function GET(req: Request) {
   try {
-    const authHeader = req.headers.get("Authorization");
+    // const authHeader = req.headers.get("Authorization");
 
-    // Validate authorization header
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { message: "Authorization token missing or invalid" },
-        { status: 401 }
-      );
-    }
+    // // Validate authorization header
+    // if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    //   return NextResponse.json(
+    //     { message: "Authorization token missing or invalid" },
+    //     { status: 401 }
+    //   );
+    // }
 
-    // Extract and verify token
-    const token = authHeader.split(" ")[1];
-    const userId = await verifyAccessToken(token);
+    // // Extract and verify token
+    // const token = authHeader.split(" ")[1];
+    // const userId = await verifyAccessToken(token);
 
-    if (!userId) {
-      return NextResponse.json(
-        { message: "Invalid or expired token" },
-        { status: 401 }
-      );
-    }
+    // if (!userId) {
+    //   return NextResponse.json(
+    //     { message: "Invalid or expired token" },
+    //     { status: 401 }
+    //   );
+    // }
 
-    console.log("Fetching posts...");
+    // console.log("Fetching posts...");
     const posts = await prisma.post.findMany({
       include: {
         user: true,
