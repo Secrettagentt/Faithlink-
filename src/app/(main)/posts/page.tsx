@@ -1,21 +1,20 @@
 "use client";
 
-import { Post } from "@/types";
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import Loader from "@/components/Loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Post } from "@/types";
+import { motion } from "framer-motion";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Loader from "@/components/Loader";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function FeedPage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -103,20 +102,18 @@ export default function FeedPage() {
                   </Link>
                 </li> */}
                 <li>
-                    <Link href={"/posts/new"}>
-                  <Button
-                    onClick={() => router.push("/posts/new")}
-                    className="font-semibold text-gray-800 shadow-lg"
-                    style={{ backgroundColor: "#F7DC6F" }}
-                  >
-                    Create Post
-                  </Button>
+                  <Link href={"/posts/new"}>
+                    <Button
+                      onClick={() => router.push("/posts/new")}
+                      className="font-semibold text-gray-800 shadow-lg"
+                      style={{ backgroundColor: "#F7DC6F" }}
+                    >
+                      Create Post
+                    </Button>
                   </Link>
-                      
                 </li>
               </ul>
             </nav>
-
           </div>
         </div>
       </header>
