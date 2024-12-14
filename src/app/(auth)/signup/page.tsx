@@ -11,9 +11,11 @@ import { useForm } from "react-hook-form";
 export default function SignupPage() {
   const router = useRouter();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
+    setLoading(true); // Start loading
     try {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
@@ -29,9 +31,10 @@ export default function SignupPage() {
       router.push("/login");
     } catch (error: any) {
       setError(error.message);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-secondary/30 to-background">
       <motion.div
@@ -72,7 +75,7 @@ export default function SignupPage() {
             />
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          <Button type="submit" className="w-full bg-primary">
+          <Button loading={loading} type="submit" className="w-full bg-primary">
             Sign Up
           </Button>
         </form>

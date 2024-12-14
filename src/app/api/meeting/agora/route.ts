@@ -7,8 +7,10 @@ export async function POST(req: Request) {
     const { channelName, date }: { channelName: string; date: string } =
       await req.json();
 
-    const agoraAppId = process.env.AGORA_APP_ID || "";
-    const agoraAppCertificate = process.env.AGORA_APP_CERTIFICATE || "";
+    const agoraAppId =
+      process.env.AGORA_APP_ID || "998e1c904157414e9010380f7931bd15";
+    const agoraAppCertificate =
+      process.env.AGORA_APP_CERTIFICATE || "020b0e6e0b5c4333bb459cf118bf6250";
 
     const startDateObject = new Date(date);
     const expirationTimeInSeconds =

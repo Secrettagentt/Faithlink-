@@ -6,10 +6,16 @@ import { endpoints, fetcher, mutator } from "../utils/axios";
 import { queryKeys } from "../utils/react-query";
 
 export function useGetAllMeetings() {
+  const token = localStorageGetItem("token");
+
   const { data, isPending, refetch, error } = useQuery<any>({
     queryKey: queryKeys.meeting.root,
-    queryFn: () => fetcher(endpoints.meeting.root),
+    queryFn: () =>
+      fetcher(endpoints.meeting.root, {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
     staleTime: 0,
+    enabled: !!token,
   });
 
   return useMemo(
@@ -24,10 +30,15 @@ export function useGetAllMeetings() {
 }
 
 export function useGetMeetingById(id: string) {
+  const token = localStorageGetItem("token");
+
   const { data, isPending, refetch, error } = useQuery<any>({
     queryKey: [queryKeys.meeting.id, id],
-    queryFn: () => fetcher(`${endpoints.meeting.root}/${id}`),
-    enabled: !!id,
+    queryFn: () =>
+      fetcher(`${endpoints.meeting.root}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+    enabled: !!id || !!token,
   });
 
   return useMemo(

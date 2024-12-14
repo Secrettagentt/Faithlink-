@@ -6,7 +6,7 @@
   --primary: 48 100% 50%; /* Yellow */
   --secondary: 199 89% 75%; /* Light Blue */
   --accent: 142 71% 45%; /* Green */
-  
+
   --background: 0 0% 100%;
   --foreground: 0 0% 3.9%;
   --card: 0 0% 100%;
@@ -42,4 +42,132 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.markdown :where(p):not(:where([class~="not-markdown"] *)) {
+  margin-bottom: clamp(0.8em, 1vw, 1.25em);
+  margin-top: clamp(0.8em, 1vw, 1.25em);
+}
+
+.markdown
+  :where(.markdown > :first-child):not(:where([class~="not-markdown"] *)) {
+  margin-top: 0;
+}
+
+.markdown
+  :where(.markdown > :last-child):not(:where([class~="not-markdown"] *)) {
+  margin-bottom: 0;
+}
+
+.markdown pre {
+  word-break: break-all;
+  white-space: break-spaces;
+  font-size: clamp(0.85rem, 1vw, 1rem);
+  padding: clamp(0.5rem, 1vw, 1rem);
+}
+
+.markdown ul {
+  @apply list-disc list-inside;
+  margin-left: clamp(1rem, 2vw, 2rem);
+}
+
+.markdown ol {
+  @apply list-decimal list-inside;
+  margin-left: clamp(1rem, 2vw, 2rem);
+}
+
+.markdown h1 {
+  font-size: clamp(2rem, 3.2vw, 2.5rem);
+  line-height: clamp(2.375rem, 3.6vw, 2.75rem);
+  padding-bottom: 10px !important;
+}
+
+.markdown h2 {
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  line-height: clamp(1.875rem, 3.2vw, 2.25rem);
+  padding-bottom: 8px !important;
+}
+
+.markdown h3 {
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  line-height: clamp(1.625rem, 2.8vw, 2rem);
+}
+
+.markdown h4 {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  line-height: clamp(1.5rem, 2.4vw, 1.75rem);
+}
+
+.markdown h5 {
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  line-height: clamp(1.375rem, 2.2vw, 1.5rem);
+}
+
+.markdown h6 {
+  font-size: clamp(0.875rem, 1.6vw, 1rem);
+  line-height: clamp(1.25rem, 2vw, 1.375rem);
+}
+
+.markdown p {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: clamp(1.5rem, 2vw, 1.75rem);
+}
+
+.markdown span {
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  line-height: clamp(1.125rem, 1.8vw, 1.5rem);
+}
+
+.markdown ul ul,
+.markdown ul ol,
+.markdown ol ul,
+.markdown ol ol {
+  @apply pl-[-10px] mt-1;
+}
+
+.markdown ul > li,
+.markdown ol > li {
+  @apply mb-1;
+}
+
+.markdown b,
+.markdown strong {
+  @apply font-black;
+  font-weight: 900 !important;
+}
+
+.markdown i,
+.markdown em {
+  font-style: italic;
+}
+
+.markdown u {
+  text-decoration: underline;
+}
+
+.markdown s,
+.markdown del {
+  text-decoration: line-through;
+}
+
+.markdown code {
+  font-family: monospace;
+  background-color: #f9f9f9;
+  padding: clamp(0.2em, 0.5vw, 0.4em) clamp(0.4em, 1vw, 0.6em);
+  border-radius: 4px;
+  font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+.markdown a {
+  color: #1a73e8;
+  text-decoration: underline;
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
+}
+
+.markdown blockquote {
+  border-left: 4px solid #dfe1e5;
+  padding-left: clamp(1em, 2vw, 1.5em);
+  color: #555;
+  font-style: italic;
+  margin: clamp(0.8em, 1vw, 1.5em) 0;
 }

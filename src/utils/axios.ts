@@ -40,4 +40,7 @@ export const endpoints = {
   meeting: {
     root: "/meeting",
   },
+  devotion: {
+    root: "/devotionals",
+  },
 };
