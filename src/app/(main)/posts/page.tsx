@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
+import Link from "next/link";
 
 export default function FeedPage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -75,23 +76,54 @@ export default function FeedPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-secondary/30 to-background">
       {/* Sticky header */}
-      <div className="sticky top-0 z-10 backdrop-blur-md bg-white/30 border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <h1 className="text-2xl font-bold text-gray-800">Feeds</h1>
-            <Button
-              onClick={() => router.push("/posts/new")}
-              className="font-semibold text-gray-800 shadow-lg"
-              style={{ backgroundColor: "#F7DC6F" }}
-            >
-              Create Post
-            </Button>
+      <header className="sticky top-0 z-50 bg-background shadow-lg">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-primary">
+              <Link href={`/`}>FaithConnect</Link>
+            </h2>
+            <nav>
+              <ul className="flex gap-6 items-center">
+                <li>
+                  <Link
+                    href="/meeting"
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    Meeting
+                  </Link>
+                </li>
+                {/* <li>
+                  <Link
+                    href="/devotionals"
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    Devotionals
+                  </Link>
+                </li> */}
+                <li>
+                  <Button
+                    onClick={() => router.push("/posts/new")}
+                    className="font-semibold text-gray-800 shadow-lg"
+                    style={{ backgroundColor: "#F7DC6F" }}
+                  >
+                    Create Post
+                  </Button>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
+      </header>
+      {/* <div className="sticky top-0 z-10 backdrop-blur-md bg-white/30 border-b border-white/20"> */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-4">
+          {/* <h1 className="text-2xl font-bold text-gray-800">Feeds</h1> */}
+        </div>
       </div>
+      {/* </div> */}
 
       {/* Main content */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="space-y-6">
           {loading ? (
             <div className="flex justify-center items-center min-h-[400px]">
