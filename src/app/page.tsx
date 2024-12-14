@@ -24,14 +24,14 @@ export default function Home() {
                     Meetings
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     href="/devotionals"
                     className="text-muted-foreground hover:text-primary"
                   >
                     Devotionals
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
                     href="/posts"
@@ -62,16 +62,20 @@ export default function Home() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-              <FeatureCard
-                icon={<Users className="w-8 h-8" />}
-                title="Connect Locally"
-                description="Meet and engage with Christians in your area"
-              />
-              <FeatureCard
-                icon={<MessageCircle className="w-8 h-8" />}
-                title="Share & Grow"
-                description="Share testimonies, devotionals, and prayers"
-              />
+              <Link href="/dating">
+                <FeatureCard
+                  icon={<Users className="w-8 h-8" />}
+                  title="Connect Locally"
+                  description="Meet and engage with Christians in your area"
+                />
+              </Link>
+              <Link href="/daily">
+                <FeatureCard
+                  icon={<MessageCircle className="w-8 h-8" />}
+                  title="Share & Grow"
+                  description="Share testimonies, devotionals, and prayers"
+                />
+              </Link>
               <FeatureCard
                 icon={<Heart className="w-8 h-8" />}
                 title="Safe Community"

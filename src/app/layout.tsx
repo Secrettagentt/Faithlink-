@@ -1,6 +1,7 @@
 import ProgressBarProvider from "@/components/progress-bar";
 import { QueryProvider } from "@/components/query-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { CurrentUserProvider } from "@/context";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -23,14 +24,16 @@ export default function RootLayout({
         {/* <AuthProvider> */}
         <ProgressBarProvider>
           <QueryProvider>
-            {/* <ThemeProvider
+            <CurrentUserProvider>
+              {/* <ThemeProvider
               attribute="class"
               defaultTheme="light"
               enableSystem={false}
             > */}
-            {children}
-            <Toaster />
-            {/* </ThemeProvider> */}
+              {children}
+              <Toaster />
+              {/* </ThemeProvider> */}
+            </CurrentUserProvider>
           </QueryProvider>
         </ProgressBarProvider>
 

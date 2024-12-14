@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCurrentUser } from "@/context";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -16,6 +17,7 @@ export default function LoginPage() {
   const { register, handleSubmit } = useForm();
   const { toast } = useToast();
 
+  const { refetchUser } = useCurrentUser();
   const onSubmit = async (data: any) => {
     setLoading(true); // Start loading
 
@@ -33,7 +35,8 @@ export default function LoginPage() {
           title: "Login success",
           description: "You have successfully login.",
         });
-        router.push("/posts");
+        router.push("/");
+        refetchUser();
       } else {
         toast({
           title: "Login failed",
@@ -49,7 +52,6 @@ export default function LoginPage() {
         description: `${error}`,
       });
       router.push("/");
-    } catch (error) {
       setError("An error occurred");
     } finally {
       setLoading(false); // Stop loading

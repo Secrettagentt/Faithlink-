@@ -1,26 +1,74 @@
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { NextApiRequest } from "next";
-import { getServerSession } from "next-auth";
-import { Server } from "socket.io";
+import { Server as HttpServer } from "http";
+import { NextApiRequest, NextApiResponse } from "next";
+import { Server as SocketServer } from "socket.io";
+import { verifyAccessToken } from "../auth/verify-token/route";
 
-export default async function SocketHandler(req: NextApiRequest, res: any) {
-  if (!res.socket.server.io) {
-    const io = new Server(res.socket.server);
+// Extend Next.js Response to include Socket.io
+interface ExtendedNextApiResponse extends NextApiResponse {
+  socket: {
+    server: HttpServer & {
+      io?: SocketServer;
+    };
+  };
+}
+
+const SocketHandler = async (
+  req: NextApiRequest,
+  res: ExtendedNextApiResponse
+) => {
+  if (!res.socket?.server?.io) {
+    console.log("Initializing Socket.io server...");
+
+    // Create a new Socket.io server
+    const io = new SocketServer(res.socket.server, {
+      path: "/api/socket",
+      cors: {
+        origin: "*", // Adjust based on your CORS policy
+        methods: ["GET", "POST"],
+      },
+    });
+
+    // Attach the Socket.io server to the Next.js response
     res.socket.server.io = io;
 
+    // Handle socket connections
     io.on("connection", (socket) => {
-      console.log("Client connected");
+      console.log("Client connected:", socket.id);
 
+      // Handle the 'joinRoom' event to subscribe users to their respective rooms
+      socket.on("joinRoom", (userId: string) => {
+        socket.join(userId); // Join the room based on userId
+        console.log(`User ${userId} joined room`);
+      });
+
+      // Listen for message events
       socket.on("message", async (data) => {
         try {
-          const session = await getServerSession(authOptions);
-          if (!session?.user) return;
+          const authHeader = req.headers.authorization;
 
+          // Validate the authorization header
+          if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            socket.emit("error", {
+              message: "Authorization token missing or invalid",
+            });
+            return;
+          }
+
+          // Extract and verify the access token
+          const token = authHeader.split(" ")[1];
+          const userId = await verifyAccessToken(token);
+
+          if (!userId) {
+            socket.emit("error", { message: "Invalid or expired token" });
+            return;
+          }
+
+          // Save the message to the database
           const message = await prisma.message.create({
             data: {
               content: data.content,
-              senderId: session.user.id,
+              senderId: userId,
               receiverId: data.receiverId,
             },
             include: {
@@ -29,17 +77,24 @@ export default async function SocketHandler(req: NextApiRequest, res: any) {
             },
           });
 
-          io.emit("message", message);
+          // Emit the message to the receiver's room
+          io.to(data.receiverId).emit("message", message); // Emit only to the receiver's room
         } catch (error) {
-          console.error("Socket message error:", error);
+          console.error("Error handling message event:", error);
+          socket.emit("error", { message: "Internal server error" });
         }
       });
 
+      // Handle client disconnections
       socket.on("disconnect", () => {
-        console.log("Client disconnected");
+        console.log("Client disconnected:", socket.id);
       });
     });
+  } else {
+    console.log("Socket.io server already initialized");
   }
 
-  res.end();
-}
+  res.status(200).end();
+};
+
+export default SocketHandler;

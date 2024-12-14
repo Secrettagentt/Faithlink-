@@ -3,13 +3,6 @@ import moment from "moment";
 import { NextResponse } from "next/server";
 import { verifyAccessToken } from "../auth/verify-token/route";
 
-type Meeting = {
-  id: number;
-  userId: number;
-  date: string;
-  [key: string]: any;
-};
-
 export async function GET(req: Request) {
   // const { id } = params; // Extract ID from params
 
@@ -37,7 +30,7 @@ export async function GET(req: Request) {
   try {
     if (userId) {
       // Fetch all meetings
-      const meetings: Meeting[] = await prisma.meeting.findMany({
+      const meetings = await prisma.meeting.findMany({
         where: { userId },
       });
       const parsedMeetingData = meetings.map((meeting) => ({
