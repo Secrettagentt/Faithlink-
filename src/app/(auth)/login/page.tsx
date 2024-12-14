@@ -1,23 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import axios from "axios";
-import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
   const { register, handleSubmit } = useForm();
   const { toast } = useToast();
 
   const onSubmit = async (data: any) => {
+    setLoading(true); // Start loading
+
     try {
       const response = await fetch("/api/auth/signin", {
         method: "POST",
@@ -47,7 +48,11 @@ export default function LoginPage() {
         title: `Login error`,
         description: `${error}`,
       });
+      router.push("/");
+    } catch (error) {
       setError("An error occurred");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -77,7 +82,7 @@ export default function LoginPage() {
             />
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          <Button type="submit" className="w-full bg-primary">
+          <Button loading={loading} type="submit" className="w-full bg-primary">
             Sign In
           </Button>
         </form>

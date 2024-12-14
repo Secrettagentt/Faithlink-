@@ -4,14 +4,15 @@ import { Post } from "@/types";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 
@@ -72,6 +73,40 @@ export default function FeedPage() {
   };
 
   return (
+    <><header className="sticky top-0 z-50 bg-background shadow-lg">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-primary">
+              <Link href={`/`}>FaithConnect</Link>
+            </h2>
+            <nav>
+              <ul className="flex gap-6 items-center">
+                <li>
+                  <Link
+                    href="/meeting"
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    Meetings
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/devotionals"
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    Devotionals
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/posts/new`}>
+                    <Button className=""> Create Post</Button>
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
     <div className="min-h-screen" style={{ backgroundColor: "#003A8B" }}>
       <div className="sticky top-0 z-10 backdrop-blur-md bg-white/30 border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -204,6 +239,6 @@ export default function FeedPage() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

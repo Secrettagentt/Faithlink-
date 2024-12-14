@@ -3,35 +3,56 @@ import moment from "moment";
 import { NextResponse } from "next/server";
 import { verifyAccessToken } from "../auth/verify-token/route";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id?: string } }
-) {
-  const { id } = params;
+type Meeting = {
+  id: number;
+  userId: number;
+  date: string;
+  [key: string]: any;
+};
+
+export async function GET(req: Request) {
+  // const { id } = params; // Extract ID from params
+
+  const authHeader = req.headers.get("Authorization");
+
+  // Validate authorization header
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return NextResponse.json(
+      { message: "Authorization token missing or invalid" },
+      { status: 401 }
+    );
+  }
+
+  // Extract and verify token
+  const token = authHeader.split(" ")[1];
+  const userId = await verifyAccessToken(token);
+
+  if (!userId) {
+    return NextResponse.json(
+      { message: "Invalid or expired token" },
+      { status: 401 }
+    );
+  }
 
   try {
-    if (!id) {
-      const meetings: any = await prisma.meeting.findMany();
-      const parsedMeetingData: any = meetings.map((meeting: any) => ({
+    if (userId) {
+      // Fetch all meetings
+      const meetings: Meeting[] = await prisma.meeting.findMany({
+        where: { userId },
+      });
+      const parsedMeetingData = meetings.map((meeting) => ({
         ...meeting,
         date: moment(meeting.date).toISOString(),
       }));
+
       const sortedMeetingData = parsedMeetingData.sort(
-        (a: any, b: any) =>
-          new Date(b.date).getTime() - new Date(a.date).getTime()
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
-      return NextResponse.json(sortedMeetingData, { status: 200 });
-    } else {
-      const meeting = await prisma.meeting.findUnique({
-        where: { id: parseInt(id, 10) },
-      });
-      if (!meeting) {
-        return NextResponse.json(
-          { error: "Meeting not found" },
-          { status: 404 }
-        );
-      }
-      return NextResponse.json(meeting, { status: 200 });
+
+      return NextResponse.json(
+        { data: sortedMeetingData, total: sortedMeetingData.length },
+        { status: 200 }
+      );
     }
   } catch (error) {
     console.error("Error fetching meetings:", error);
@@ -65,7 +86,7 @@ export async function POST(req: Request) {
       );
     }
     const newMeeting = await req.json();
-    console.log("newMeeting >>>", newMeeting);
+
     if (newMeeting.date) {
       const parsedDate = new Date(newMeeting.date);
       if (isNaN(parsedDate.getTime())) {
