@@ -13,14 +13,11 @@ import { useForm } from "react-hook-form";
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Loading state
   const { register, handleSubmit } = useForm();
   const { toast } = useToast();
 
   const { refetchUser } = useCurrentUser();
   const onSubmit = async (data: any) => {
-    setLoading(true); // Start loading
-
     try {
       const response = await fetch("/api/auth/signin", {
         method: "POST",
@@ -51,10 +48,7 @@ export default function LoginPage() {
         title: `Login error`,
         description: `${error}`,
       });
-      router.push("/");
       setError("An error occurred");
-    } finally {
-      setLoading(false); // Stop loading
     }
   };
 
@@ -84,7 +78,7 @@ export default function LoginPage() {
             />
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          <Button loading={loading} type="submit" className="w-full bg-primary">
+          <Button type="submit" className="w-full bg-primary">
             Sign In
           </Button>
         </form>

@@ -15,13 +15,13 @@ export default function Home() {
               <Link href={`/`}>FaithConnect</Link>
             </h2>
             <nav>
-              <ul className="flex gap-6">
+              <ul className="flex gap-6 items-center">
                 <li>
                   <Link
                     href="/meeting"
                     className="text-muted-foreground hover:text-primary"
                   >
-                    Meetings
+                    Meeting
                   </Link>
                 </li>
                 {/* <li>
@@ -54,7 +54,7 @@ export default function Home() {
             className="text-center"
           >
             <h1 className="text-5xl font-bold text-primary mb-6">
-              Welcome to FaithConnect
+              Welcome to FaithLink
             </h1>
             <p className="text-xl text-muted-foreground mb-12">
               Connect with fellow believers, share your faith journey, and grow
@@ -76,11 +76,13 @@ export default function Home() {
                   description="Share testimonies, devotionals, and prayers"
                 />
               </Link>
-              <FeatureCard
-                icon={<Heart className="w-8 h-8" />}
-                title="Safe Community"
-                description="AI-powered content moderation for a wholesome experience"
-              />
+              <Link href="/quiz">
+                <FeatureCard
+                  icon={<Heart className="w-8 h-8" />}
+                  title="Bible Trivia"
+                  description="Join us and grow spiritually and also play bible games"
+                />
+              </Link>
             </div>
 
             <div className="flex justify-center gap-4">
@@ -90,11 +92,6 @@ export default function Home() {
                   className="bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   Get Started
-                </Button>
-              </Link>
-              <Link href="/about">
-                <Button size="lg" variant="outline">
-                  Learn More
                 </Button>
               </Link>
             </div>

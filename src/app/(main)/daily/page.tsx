@@ -10,18 +10,39 @@ const devotionals = [
     bibleVerse: "John 3:16",
     memoryVerse: "For God so loved the world...",
     reference: "John 3:16",
-    content: "Today, reflect on the profound love God has for you...",
+    content:
+      "Today, reflect on the profound love God has for you. He sent His only Son to die for our sins, offering us the gift of eternal life. Take time to meditate on this immeasurable love and its impact on your life. Remember, you are cherished and valued beyond measure. Let this truth guide your actions and strengthen your faith, knowing that God's love is unchanging, everlasting, and always present, no matter the circumstances you face.",
   },
 ];
 
 const prayers = [
-  { date: "Today", prayer: "Lord, guide me today and keep me close to You..." },
+  {
+    date: "Today",
+    prayer: [
+      "Heavenly Father, thank You for the gift of a new day. Guide my steps and grant me wisdom in all my decisions.",
+      "Lord, help me to reflect Your love in my interactions with others. Teach me to forgive as You have forgiven me.",
+      "I pray for strength and courage to face any challenges that may come my way today. Help me to trust in Your plan.",
+      "Thank You for Your provision and protection. I commit my family, friends, and loved ones into Your hands.",
+      "Father, as I go through this day, let my actions glorify You and bring others closer to Your light.",
+    ],
+  },
 ];
 
 const testimonies = [
   {
     user: "Jane Doe",
-    content: "God healed me after years of illness. Praise the Lord!",
+    content:
+      "God healed me after years of illness. I had lost hope, but through the prayers of my church community and unwavering faith, I experienced a miraculous recovery. Praise the Lord!",
+  },
+  {
+    user: "John Smith",
+    content:
+      "After months of unemployment, God opened a door for me that I never imagined. I now have a job that aligns perfectly with my skills and passion. Truly, His timing is perfect.",
+  },
+  {
+    user: "Emily Johnson",
+    content:
+      "God saved my marriage when it seemed irreparable. Through prayer, counseling, and faith, my spouse and I found our way back to each other. I am forever grateful for His grace.",
   },
 ];
 
@@ -133,26 +154,14 @@ export default function Home() {
                   key={index}
                   className="p-4 bg-card rounded-lg shadow-lg mb-2"
                 >
-                  <p className="text-muted-foreground">{prayer.prayer}</p>
+                  <ul className="list-disc list-inside text-muted-foreground">
+                    {prayer.prayer.map((line, i) => (
+                      <li key={i}>{line}</li>
+                    ))}
+                  </ul>
                 </div>
               ))}
             </section>
-
-            {/* <div className="flex justify-center gap-4">
-              <Link href="/signup">
-                <Button
-                  size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90"
-                >
-                  Get Started
-                </Button>
-              </Link>
-              <Link href="/about">
-                <Button size="lg" variant="outline">
-                  Learn More
-                </Button>
-              </Link>
-            </div> */}
           </motion.div>
         </main>
       </div>

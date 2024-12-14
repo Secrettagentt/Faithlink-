@@ -14,6 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { Filter } from "bad-words";
+import * as tf from "@tensorflow/tfjs";
 
 export default function CreatePost() {
   const [category, setCategory] = useState("");
@@ -61,7 +63,7 @@ export default function CreatePost() {
 
           if (uploadResponse.ok) {
             const data = await uploadResponse.json();
-            setMediaUrl(data.url); // Assuming the response contains the uploaded file URL
+            setMediaUrl(data.url);
             toast({
               title: "File uploaded",
               description: "Your file has been successfully uploaded.",
@@ -99,22 +101,34 @@ export default function CreatePost() {
     setIsLoading(true);
 
     try {
-      //   const vulgar = await fetch("/api/vulgar", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ content }),
-      //   });
+      // Step 1: Check for vulgar words using the `bad-words` library
+      const filter = new Filter();
+      const cleanContent = filter.clean(content); // Clean the content
+      console.log(cleanContent);
 
-      //   const data = await vulgar.json();
-      //   if (data.containsVulgarWords) {
+      if (cleanContent !== content) {
+        toast({
+          title: "Warning",
+          description:
+            "Your post contains vulgar words. Please consider removing them.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Step 2: Analyze the content with TensorFlow.js (Optional sentiment analysis)
+      //   const sentimentScore = await analyzeContentWithTFJS(content);
+
+      //   if (sentimentScore < 0) {
       //     toast({
       //       title: "Warning",
-      //       description:
-      //         "Your post contains vulgar words. Please consider removing them.",
+      //       description: "Your post seems negative. Please consider revising it.",
       //       variant: "destructive",
       //     });
+      //     return;
+      //   }
+
+      // Step 3: Create the post after validation
       const token = localStorage.getItem("token");
       const response = await fetch("/api/posts", {
         method: "POST",
@@ -124,7 +138,7 @@ export default function CreatePost() {
         },
         body: JSON.stringify({
           category,
-          content,
+          content, // Use the cleaned content
           mediaType,
           mediaUrl,
         }),
@@ -145,7 +159,6 @@ export default function CreatePost() {
       } else {
         throw new Error("Failed to create post");
       }
-      //   }
     } catch (error) {
       console.log(error);
       toast({
@@ -158,19 +171,59 @@ export default function CreatePost() {
     }
   };
 
+  // TensorFlow.js content analysis function (Optional)
+  //   const analyzeContentWithTFJS = async (content: string): Promise<number> => {
+  //     try {
+  //       // Ensure TensorFlow.js is ready
+  //       await tf.ready();
+
+  //       // Load the pre-trained model
+  //       const model = await tf.loadLayersModel("/models/sentiment_model.json");
+
+  //       // Tokenization and preprocessing (adjust based on your model's input format)
+  //       const tokenizedInput = tokenizeText(content); // Define your tokenizer function
+  //       const inputTensor = tf.tensor([tokenizedInput]);
+
+  //       // Use the model to make a prediction
+  //       const prediction = model.predict(inputTensor) as tf.Tensor;
+
+  //       // Extract the sentiment score
+  //       const sentimentScore = prediction.dataSync()[0]; // Adjust if model returns more than one value
+
+  //       return sentimentScore;
+  //     } catch (error) {
+  //       console.error("Error during sentiment analysis:", error);
+  //       throw error;
+  //     }
+  //   };
+
+  // Example tokenizer (adjust to match the model's training process)
+  //   const tokenizeText = (text: string): number[] => {
+  //     // Replace with actual tokenization logic (e.g., word-to-index mapping, padding)
+  //     // For example, a simple dummy tokenizer might map each character to its ASCII code
+  //     return text.split("").map((char) => char.charCodeAt(0));
+  //   };
+
   return (
-    <div className="h-screen flex items-center justify-center bg-[#003A8B]">
+    <div className="h-screen flex items-center justify-center bg-gradient-to-b from-secondary/30 to-background">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-2xl p-8 bg-white rounded-xl shadow-2xl space-y-6"
       >
-        <h1 className="text-3xl font-semibold text-center text-[#003A8B]">
+        <h1 className="text-3xl font-semibold text-center text-green-900-">
           Create a Post
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
+            <Textarea
+              placeholder="What's on your mind?"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={4}
+              className="w-full resize-none border rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
             <Select
               onValueChange={(value: SetStateAction<string>) =>
                 setCategory(value)
@@ -180,22 +233,14 @@ export default function CreatePost() {
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="technology">Technology</SelectItem>
-                <SelectItem value="sports">Sports</SelectItem>
-                <SelectItem value="entertainment">Entertainment</SelectItem>
-                <SelectItem value="education">Education</SelectItem>
+                <SelectItem value="technology">Scriptures</SelectItem>
+                <SelectItem value="prayer">Prayer</SelectItem>
+                <SelectItem value="meditation">Meditation</SelectItem>
+                <SelectItem value="faith">Faith</SelectItem>
+                <SelectItem value="manifestation">Manifestation</SelectItem>
               </SelectContent>
             </Select>
           </div>
-
-          <Textarea
-            placeholder="What's on your mind?"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={4}
-            className="w-full resize-none border rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
           <div className="space-y-2">
             <Select
               onValueChange={(value: SetStateAction<string>) =>
@@ -231,7 +276,7 @@ export default function CreatePost() {
 
           <Button
             type="submit"
-            className="w-full py-3 px-6 bg-[#003A8B] text-white rounded-lg hover:bg-[#005aab] transition duration-300"
+            className="w-full py-3 px-6 bg-yellow-500 text-white rounded-lg hover:bg-[#005aab] transition duration-300"
             disabled={
               isLoading ||
               !content.trim() ||
