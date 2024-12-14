@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  // console.log(req.json());
-  const { content } = await req.json();
-  const { searchParams } = new URL(req.url);
-  const source_language = searchParams.get("sourceLanguage");
-  const target_language = searchParams.get("targetLanguage");
-  console.log(source_language, target_language);
-  console.log(content);
+  // console.log(await req.json());
+  const { content, target_language, source_language, targetLanguage } =
+    await req.json();
   const apiKey = process.env.HUGGING_FACE_API_KEY;
-
+  console.log(content, targetLanguage);
   if (!apiKey) {
     return NextResponse.json({ error: "API key is missing" }, { status: 500 });
   }
@@ -18,7 +14,7 @@ export async function POST(req: Request) {
 
   try {
     const response = await fetch(
-      `https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-${source_language}-${target_language}`,
+      `https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-fr`,
       {
         method: "POST",
         headers: {
@@ -26,22 +22,20 @@ export async function POST(req: Request) {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          q: content,
-          source: "en",
-          target: target_language,
-          format: "text",
+          inputs: content,
         }),
       }
     );
 
     const data = await response.json();
     console.log(data);
+    const translatedText = data[0]?.translation_text;
 
     if (data.error) {
       return NextResponse.json({ error: data.error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ translatedText: data.choices[0].text.trim() });
+    return NextResponse.json({ translatedText });
   } catch (error) {
     console.error("Error during translation:", error);
     return NextResponse.json(

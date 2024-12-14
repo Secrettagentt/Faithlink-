@@ -11,8 +11,8 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-background shadow-lg">
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-primary">
-              <Link href={`/`}>FaithConnect</Link>
+            <h2 className="text-2xl font-semibold text-primary">
+              <Link href={`/`}>FaithLink</Link>
             </h2>
             <nav>
               <ul className="flex gap-6">
@@ -54,7 +54,7 @@ export default function Home() {
             className="text-center"
           >
             <h1 className="text-5xl font-bold text-primary mb-6">
-              Welcome to FaithConnect
+              Welcome to FaithLink
             </h1>
             <p className="text-xl text-muted-foreground mb-12">
               Connect with fellow believers, share your faith journey, and grow
@@ -62,21 +62,27 @@ export default function Home() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-              <FeatureCard
-                icon={<Users className="w-8 h-8" />}
-                title="Connect Locally"
-                description="Meet and engage with Christians in your area"
-              />
-              <FeatureCard
-                icon={<MessageCircle className="w-8 h-8" />}
-                title="Share & Grow"
-                description="Share testimonies, devotionals, and prayers"
-              />
-              <FeatureCard
-                icon={<Heart className="w-8 h-8" />}
-                title="Safe Community"
-                description="AI-powered content moderation for a wholesome experience"
-              />
+              <Link href="">
+                <FeatureCard
+                  icon={<Users className="w-8 h-8" />}
+                  title="Connect Locally"
+                  description="Meet and engage with Christians in your area"
+                />
+              </Link>
+              <Link href="">
+                <FeatureCard
+                  icon={<MessageCircle className="w-8 h-8" />}
+                  title="Share & Grow"
+                  description="Share testimonies, devotionals, and prayers"
+                />
+              </Link>
+              <Link href="/quiz">
+                <FeatureCard
+                  icon={<Heart className="w-8 h-8" />}
+                  title="Bible Trivia"
+                  description="Join us and grow spiritually and also play bible games"
+                />
+              </Link>
             </div>
 
             <div className="flex justify-center gap-4">
@@ -86,11 +92,6 @@ export default function Home() {
                   className="bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   Get Started
-                </Button>
-              </Link>
-              <Link href="/about">
-                <Button size="lg" variant="outline">
-                  Learn More
                 </Button>
               </Link>
             </div>
