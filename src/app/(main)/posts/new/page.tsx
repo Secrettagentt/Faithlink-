@@ -217,6 +217,13 @@ export default function CreatePost() {
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
+            <Textarea
+              placeholder="What's on your mind?"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={4}
+              className="w-full resize-none border rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
             <Select
               onValueChange={(value: SetStateAction<string>) =>
                 setCategory(value)
@@ -226,22 +233,14 @@ export default function CreatePost() {
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="technology">Technology</SelectItem>
-                <SelectItem value="sports">Sports</SelectItem>
-                <SelectItem value="entertainment">Entertainment</SelectItem>
-                <SelectItem value="education">Education</SelectItem>
+                <SelectItem value="technology">Scriptures</SelectItem>
+                <SelectItem value="prayer">Prayer</SelectItem>
+                <SelectItem value="meditation">Meditation</SelectItem>
+                <SelectItem value="faith">Faith</SelectItem>
+                <SelectItem value="manifestation">Manifestation</SelectItem>
               </SelectContent>
             </Select>
           </div>
-
-          <Textarea
-            placeholder="What's on your mind?"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={4}
-            className="w-full resize-none border rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
           <div className="space-y-2">
             <Select
               onValueChange={(value: SetStateAction<string>) =>

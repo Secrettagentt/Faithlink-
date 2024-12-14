@@ -74,6 +74,7 @@ export default function FeedPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-secondary/30 to-background">
+      {/* Sticky header */}
       <div className="sticky top-0 z-10 backdrop-blur-md bg-white/30 border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
@@ -89,11 +90,18 @@ export default function FeedPage() {
         </div>
       </div>
 
+      {/* Main content */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {loading ? (
             <div className="flex justify-center items-center min-h-[400px]">
               <Loader color="#34C759" />
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="flex justify-center items-center min-h-[400px]">
+              <p className="text-lg text-gray-500">
+                No posts available. Be the first to create one!
+              </p>
             </div>
           ) : (
             posts.map((post) => (
