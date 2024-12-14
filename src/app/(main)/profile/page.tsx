@@ -3,34 +3,34 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCurrentUser } from "@/context";
 import { motion } from "framer-motion";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 // import ProfileForm from "@/components/profile/ProfileForm"
 // import UserPosts from "@/components/profile/UserPosts"
 // import UserDevotionals from "@/components/profile/UserDevotionals"
 
 export default function ProfilePage() {
-  const { data: session } = useSession();
-  const [profile, setProfile] = useState<any>(null);
+  const { user } = useCurrentUser();
+  // const { data: session } = useSession();
+  // const [profile, setProfile] = useState<any>(null);
 
-  useEffect(() => {
-    if (session?.user) {
-      fetchProfile();
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   if (session?.user) {
+  //     fetchProfile();
+  //   }
+  // }, [session]);
 
-  const fetchProfile = async () => {
-    try {
-      const response = await fetch(`/api/users/${(session as any)?.user.id}`);
-      const data = await response.json();
-      setProfile(data);
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-    }
-  };
+  // const fetchProfile = async () => {
+  //   try {
+  //     const response = await fetch(`/api/users/${(session as any)?.user.id}`);
+  //     const data = await response.json();
+  //     setProfile(data);
+  //   } catch (error) {
+  //     console.error("Error fetching profile:", error);
+  //   }
+  // };
 
-  if (!profile) return <div>Loading...</div>;
+  // if (!profile) return <div>Loading...</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -42,12 +42,12 @@ export default function ProfilePage() {
         <Card className="p-6 mb-8">
           <div className="flex items-center space-x-4 mb-6">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold">{profile.name}</h1>
-              <p className="text-muted-foreground">{profile.location}</p>
+              <h1 className="text-3xl font-bold">{user?.name}</h1>
+              <p className="text-muted-foreground">{(user as any)?.location}</p>
             </div>
             <Button variant="outline">Edit Profile</Button>
           </div>
-          <p className="text-lg">{profile.bio || "No bio yet"}</p>
+          <p className="text-lg">{(user as any)?.bio || "No bio yet"}</p>
         </Card>
 
         <Tabs defaultValue="posts">
