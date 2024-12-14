@@ -11,13 +11,13 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    optimizeFonts: true,
-    optimizeImages: true,
-    optimizeCss: true,
-    // appDir: false,
-    // esmExternals: "loose",
-  },
+  // experimental: {
+  //   optimizeFonts: true,
+  //   optimizeImages: true,
+  //   optimizeCss: true,
+  //   // appDir: false,
+  //   // esmExternals: "loose",
+  // },
   webpack: (config) => {
     config.optimization.minimize = true;
     return config;

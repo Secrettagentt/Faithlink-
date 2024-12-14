@@ -1,8 +1,7 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { generateAccessToken } from "@/lib/token";
 import bcrypt from "bcrypt";
-import { generateAccessToken } from "../verify-token/route";
-import cookie from "cookie";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {

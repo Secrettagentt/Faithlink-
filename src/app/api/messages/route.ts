@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
+import { verifyAccessToken } from "@/lib/token";
 import { NextResponse } from "next/server";
-import { verifyAccessToken } from "../auth/verify-token/route";
 
 export async function POST(req: Request) {
   try {

@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import { verifyAccessToken } from "@/lib/token";
 import moment from "moment";
 import { NextResponse } from "next/server";
-import { verifyAccessToken } from "../auth/verify-token/route";
 
 export async function GET(req: Request) {
   // const { id } = params; // Extract ID from params
@@ -111,53 +111,53 @@ export async function POST(req: Request) {
   }
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+// export async function PUT(
+//   req: Request,
+//   { params }: { params: { id: string } }
+// ) {
+//   const { id } = params;
 
-  if (!id) {
-    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-  }
+//   if (!id) {
+//     return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+//   }
 
-  try {
-    const updatedMeeting = await req.json();
-    const meetingToUpdate = await prisma.meeting.update({
-      where: { id: parseInt(id, 10) },
-      data: updatedMeeting,
-    });
-    return NextResponse.json(meetingToUpdate, { status: 200 });
-  } catch (error) {
-    console.error("Error updating meeting:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
+//   try {
+//     const updatedMeeting = await req.json();
+//     const meetingToUpdate = await prisma.meeting.update({
+//       where: { id: parseInt(id, 10) },
+//       data: updatedMeeting,
+//     });
+//     return NextResponse.json(meetingToUpdate, { status: 200 });
+//   } catch (error) {
+//     console.error("Error updating meeting:", error);
+//     return NextResponse.json(
+//       { error: "Internal server error" },
+//       { status: 500 }
+//     );
+//   }
+// }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+// export async function DELETE(
+//   req: Request,
+//   { params }: { params: { id: string } }
+// ) {
+//   const { id } = params;
 
-  if (!id) {
-    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-  }
+//   if (!id) {
+//     return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+//   }
 
-  try {
-    await prisma.meeting.delete({ where: { id: parseInt(id, 10) } });
-    return NextResponse.json(
-      { message: "Meeting deleted successfully" },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error deleting meeting:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
+//   try {
+//     await prisma.meeting.delete({ where: { id: parseInt(id, 10) } });
+//     return NextResponse.json(
+//       { message: "Meeting deleted successfully" },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error deleting meeting:", error);
+//     return NextResponse.json(
+//       { error: "Internal server error" },
+//       { status: 500 }
+//     );
+//   }
+// }

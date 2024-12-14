@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "./prisma";
 
 const secretKey: string = process.env.JWT_SECRET_KEY || "";
 

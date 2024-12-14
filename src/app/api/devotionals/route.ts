@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import { verifyAccessToken } from "@/lib/token";
 import moment from "moment";
 import { NextResponse } from "next/server";
-import { verifyAccessToken } from "../auth/verify-token/route";
 
 export async function GET() {
   try {

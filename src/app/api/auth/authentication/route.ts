@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { parse } from "cookie";
 import { prisma } from "@/lib/prisma";
-import { verifyAccessToken } from "../verify-token/route";
+import { verifyAccessToken } from "@/lib/token";
+import { parse } from "cookie";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {

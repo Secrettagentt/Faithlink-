@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
 
 type DifficultyLevel = "easy" | "medium" | "hard";
@@ -136,7 +136,7 @@ const BibleQuest: React.FC = () => {
                         ? "bg-green-900 text-white"
                         : "bg-gray-200 text-gray-800"
                     }`}
-                    onClick={() => setCurrentDifficulty(difficulty)}
+                    onClick={() => setCurrentDifficulty(difficulty as any)}
                   >
                     {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
                   </button>
