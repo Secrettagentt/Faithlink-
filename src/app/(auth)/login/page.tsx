@@ -29,12 +29,24 @@ export default function LoginPage() {
       if (response.ok) {
         localStorage.setItem("token", responseData.token);
         console.log("Sign-in successful:", data);
+        toast({
+          title: "Login success",
+          description: "You have successfully login.",
+        });
+        router.push("/posts");
       } else {
+        toast({
+          title: "Login failed",
+          description:
+            responseData.message || "An error occurred. Please try again.",
+          variant: "destructive",
+        });
         console.error("Error:", data.message);
       }
+    } catch (error) {
       toast({
-        title: "Login success",
-        description: "You have successfully login.",
+        title: `Login error`,
+        description: `${error}`,
       });
       router.push("/");
     } catch (error) {
