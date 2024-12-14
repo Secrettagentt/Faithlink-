@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
     const startDateObject = new Date(date);
     const expirationTimeInSeconds =
-      Math.floor(startDateObject.getTime() / 1000) + 86400;
+      Math.floor(startDateObject.getTime() / 1000) + 5 * 24 * 60 * 60;
 
     const token = RtcTokenBuilder.buildTokenWithUid(
       agoraAppId,

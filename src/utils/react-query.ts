@@ -39,4 +39,8 @@ export const queryKeys = {
     root: [{ type: "devotion" }],
     id: [{ type: "devotionById" }],
   },
+  messages: {
+    root: [{ type: "  messages" }],
+    id: [{ type: "messagesById" }],
+  },
 };

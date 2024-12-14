@@ -33,7 +33,7 @@ export const mutator = async <Data>(
 
 export const endpoints = {
   user: {
-    root: "/users",
+    root: "/user",
     register: "/users/register",
     all: "/users/all",
   },
@@ -42,5 +42,8 @@ export const endpoints = {
   },
   devotion: {
     root: "/devotionals",
+  },
+  message: {
+    root: "/messages",
   },
 };

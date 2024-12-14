@@ -102,7 +102,7 @@ export default function DevotionListPage() {
             <p className="text-center text-gray-500">No devotions found</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredDevotions.map((devotion: any) => (
+              {filteredDevotions?.map((devotion: any) => (
                 <div
                   key={devotion.id}
                   className="bg-card p-4 rounded-lg shadow hover:shadow-lg transition-shadow"

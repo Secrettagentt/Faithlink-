@@ -11,27 +11,27 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-background shadow-lg">
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold text-primary">
-              <Link href={`/`}>FaithLink</Link>
+            <h2 className="text-xl font-semibold text-primary">
+              <Link href={`/`}>FaithConnect</Link>
             </h2>
             <nav>
-              <ul className="flex gap-6">
+              <ul className="flex gap-6 items-center">
                 <li>
                   <Link
                     href="/meeting"
                     className="text-muted-foreground hover:text-primary"
                   >
-                    Meetings
+                    Meeting
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     href="/devotionals"
                     className="text-muted-foreground hover:text-primary"
                   >
                     Devotionals
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
                     href="/posts"
@@ -62,14 +62,14 @@ export default function Home() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-              <Link href="">
+              <Link href="/dating">
                 <FeatureCard
                   icon={<Users className="w-8 h-8" />}
                   title="Connect Locally"
                   description="Meet and engage with Christians in your area"
                 />
               </Link>
-              <Link href="">
+              <Link href="/daily">
                 <FeatureCard
                   icon={<MessageCircle className="w-8 h-8" />}
                   title="Share & Grow"

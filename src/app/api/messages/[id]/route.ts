@@ -1,9 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { verifyAccessToken } from "../auth/verify-token/route";
+import { verifyAccessToken } from "../../auth/verify-token/route";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   try {
+    const url = new URL(req.url);
+
+    const id = url.pathname.split("/").filter(Boolean).pop() as string;
+
     const authHeader = req.headers.get("Authorization");
 
     // Validate authorization header
@@ -24,24 +28,25 @@ export async function POST(req: Request) {
         { status: 401 }
       );
     }
-
-    const { content, receiverId } = await req.json();
-
-    const message = await prisma.message.create({
-      data: {
-        content,
-        senderId: userId,
-        receiverId,
+    const conversations = await prisma.message.findMany({
+      where: {
+        OR: [
+          { senderId: userId, receiverId: id },
+          { senderId: id, receiverId: userId },
+        ],
       },
       include: {
         sender: true,
         receiver: true,
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
 
-    return NextResponse.json(message, { status: 201 });
+    return NextResponse.json(conversations);
   } catch (error) {
-    console.error("Error sending message:", error);
+    console.error("Error fetching messages:", error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }

@@ -49,14 +49,14 @@ export default function MeetingListPage() {
                     <Button className="">Create Meeting</Button>
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     href="/devotionals"
                     className="text-muted-foreground hover:text-primary"
                   >
                     Devotionals
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
                     href="/posts"

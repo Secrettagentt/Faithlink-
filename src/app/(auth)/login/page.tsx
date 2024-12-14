@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCurrentUser } from "@/context";
+import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import axios from "axios";
-import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,6 +16,7 @@ export default function LoginPage() {
   const { register, handleSubmit } = useForm();
   const { toast } = useToast();
 
+  const { refetchUser } = useCurrentUser();
   const onSubmit = async (data: any) => {
     try {
       const response = await fetch("/api/auth/signin", {
@@ -32,7 +32,8 @@ export default function LoginPage() {
           title: "Login success",
           description: "You have successfully login.",
         });
-        router.push("/posts");
+        router.push("/");
+        refetchUser();
       } else {
         toast({
           title: "Login failed",
