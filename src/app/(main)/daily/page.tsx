@@ -65,14 +65,14 @@ export default function Home() {
                     Meetings
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     href="/devotionals"
                     className="text-muted-foreground hover:text-primary"
                   >
                     Devotionals
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
                     href="/posts"
