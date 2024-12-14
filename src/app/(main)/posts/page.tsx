@@ -4,15 +4,14 @@ import { Post } from "@/types";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 
@@ -22,10 +21,6 @@ export default function FeedPage() {
   const [translating, setTranslating] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const [translatedTexts, setTranslatedTexts] = useState<{
-    [key: string]: string;
-  }>({});
-
   const router = useRouter();
 
   useEffect(() => {
@@ -49,26 +44,26 @@ export default function FeedPage() {
 
     try {
       const userPreferredLanguage = navigator.language || "en";
-      const response = await fetch(
-        `/api/translation?sourceLanguage=en&targetLanguage=es`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            content,
-          }),
-        }
-      );
+      const response = await fetch("/api/translation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content,
+          target_language: "es",
+          source_language: "en",
+        }),
+      });
 
       const data = await response.json();
 
-      if (data.translated_text) {
-        setTranslatedTexts((prev) => ({
-          ...prev,
-          [postId]: data.translated_text,
-        }));
-      } else {
-        console.error(data.error || "Translation failed");
+      if (data.translatedText) {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === postId
+              ? { ...post, content: data.translatedText }
+              : post
+          )
+        );
       }
     } catch (error) {
       console.error("Error translating post:", error);
@@ -78,45 +73,11 @@ export default function FeedPage() {
   };
 
   return (
-    <><header className="sticky top-0 z-50 bg-background shadow-lg">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-primary">
-              <Link href={`/`}>FaithConnect</Link>
-            </h2>
-            <nav>
-              <ul className="flex gap-6 items-center">
-                <li>
-                  <Link
-                    href="/meeting"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    Meetings
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/devotionals"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    Devotionals
-                  </Link>
-                </li>
-                <li>
-                  <Link href={`/posts/new`}>
-                    <Button className=""> Create Post</Button>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
-    <div className="min-h-screen" style={{ backgroundColor: "#003A8B" }}>
+    <div className="min-h-screen bg-gradient-to-b from-secondary/30 to-background">
       <div className="sticky top-0 z-10 backdrop-blur-md bg-white/30 border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <h1 className="text-2xl font-bold text-gray-800">Social Feed</h1>
+            <h1 className="text-2xl font-bold text-gray-800">Feeds</h1>
             <Button
               onClick={() => router.push("/posts/new")}
               className="font-semibold text-gray-800 shadow-lg"
@@ -170,7 +131,7 @@ export default function FeedPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-700 leading-relaxed">
-                      {translatedTexts[post.id] || post.content}
+                      {post.content}
                     </p>
                     <Button
                       variant="ghost"
@@ -244,6 +205,6 @@ export default function FeedPage() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
