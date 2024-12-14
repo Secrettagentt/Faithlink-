@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { content, targetLanguage } = await req.json();
-
-  const apiKey = process.env.OPENAI_API_KEY;
+  // console.log(req.json());
+  const { content } = await req.json();
+  const { searchParams } = new URL(req.url);
+  const source_language = searchParams.get("sourceLanguage");
+  const target_language = searchParams.get("targetLanguage");
+  console.log(source_language, target_language);
+  console.log(content);
+  const apiKey = process.env.HUGGING_FACE_API_KEY;
 
   if (!apiKey) {
     return NextResponse.json({ error: "API key is missing" }, { status: 500 });
@@ -13,17 +18,17 @@ export async function POST(req: Request) {
 
   try {
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-${source_language}-${target_language}",
+      `https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-${source_language}-${target_language}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           q: content,
           source: "en",
-          target: targetLanguage,
+          target: target_language,
           format: "text",
         }),
       }
