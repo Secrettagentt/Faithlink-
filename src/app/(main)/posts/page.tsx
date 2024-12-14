@@ -1,20 +1,20 @@
 "use client";
 
-import { Post } from "@/types";
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import Loader from "@/components/Loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Post } from "@/types";
+import { motion } from "framer-motion";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import Loader from "@/components/Loader";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function FeedPage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -76,6 +76,7 @@ export default function FeedPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-secondary/30 to-background">
       {/* Sticky header */}
+
       <header className="sticky top-0 z-50 bg-background shadow-lg">
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
@@ -101,13 +102,15 @@ export default function FeedPage() {
                   </Link>
                 </li> */}
                 <li>
-                  <Button
-                    onClick={() => router.push("/posts/new")}
-                    className="font-semibold text-gray-800 shadow-lg"
-                    style={{ backgroundColor: "#F7DC6F" }}
-                  >
-                    Create Post
-                  </Button>
+                  <Link href={"/posts/new"}>
+                    <Button
+                      onClick={() => router.push("/posts/new")}
+                      className="font-semibold text-gray-800 shadow-lg"
+                      style={{ backgroundColor: "#F7DC6F" }}
+                    >
+                      Create Post
+                    </Button>
+                  </Link>
                 </li>
               </ul>
             </nav>
