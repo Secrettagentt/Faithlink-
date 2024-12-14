@@ -9,7 +9,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FaithConnect",
+  title: "FaithLink",
   description: "Connect with fellow believers near you",
 };
 

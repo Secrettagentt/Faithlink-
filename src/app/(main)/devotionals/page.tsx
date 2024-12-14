@@ -41,7 +41,7 @@ export default function DevotionListPage() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold text-primary">
-              <Link href={`/`}>FaithConnect</Link>
+              <Link href={`/`}>FaithLink</Link>
             </h2>
             <nav>
               <ul className="flex gap-6 items-center">

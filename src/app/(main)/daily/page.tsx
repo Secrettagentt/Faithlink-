@@ -53,7 +53,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold text-primary">
-              <Link href={`/`}>FaithConnect</Link>
+              <Link href={`/`}>FaithLink</Link>
             </h2>
             <nav>
               <ul className="flex gap-6">
@@ -94,9 +94,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <h1 className="text-5xl font-bold text-primary mb-6">
-              FaithConnect
-            </h1>
+            <h1 className="text-5xl font-bold text-primary mb-6">FaithLink</h1>
             <p className="text-xl text-muted-foreground mb-12">
               Join a community of believers, share your testimonies, reflect on
               devotionals, and strengthen your faith journey together in Christ.
