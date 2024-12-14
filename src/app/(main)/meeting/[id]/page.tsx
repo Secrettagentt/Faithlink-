@@ -243,7 +243,7 @@ function AgoraUIVideoPlayer({ token, channel, setJoined, setLoading }: any) {
           height: "60px",
         }}
       >
-        <h3 style={{ margin: 0 }}>Faith Connect Calls</h3>
+        <h3 style={{ margin: 0 }}>FaithLink Calls</h3>
         <div>
           <span> {user?.name || "Guest"}</span>
         </div>
