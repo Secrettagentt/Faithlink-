@@ -22,6 +22,10 @@ export default function FeedPage() {
   const [translating, setTranslating] = useState<{ [key: string]: boolean }>(
     {}
   );
+  const [translatedTexts, setTranslatedTexts] = useState<{
+    [key: string]: string;
+  }>({});
+
   const router = useRouter();
 
   useEffect(() => {
@@ -45,25 +49,26 @@ export default function FeedPage() {
 
     try {
       const userPreferredLanguage = navigator.language || "en";
-      const response = await fetch("/api/translation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          content,
-          targetLanguage: userPreferredLanguage,
-        }),
-      });
+      const response = await fetch(
+        `/api/translation?sourceLanguage=en&targetLanguage=es`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content,
+          }),
+        }
+      );
 
       const data = await response.json();
 
-      if (data.translatedText) {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === postId
-              ? { ...post, content: data.translatedText }
-              : post
-          )
-        );
+      if (data.translated_text) {
+        setTranslatedTexts((prev) => ({
+          ...prev,
+          [postId]: data.translated_text,
+        }));
+      } else {
+        console.error(data.error || "Translation failed");
       }
     } catch (error) {
       console.error("Error translating post:", error);
@@ -165,7 +170,7 @@ export default function FeedPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-700 leading-relaxed">
-                      {post.content}
+                      {translatedTexts[post.id] || post.content}
                     </p>
                     <Button
                       variant="ghost"
