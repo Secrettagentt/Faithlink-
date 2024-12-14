@@ -18,6 +18,9 @@ import Loader from "@/components/Loader";
 export default function FeedPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [translating, setTranslating] = useState<{ [key: string]: boolean }>(
+    {}
+  );
   const router = useRouter();
 
   useEffect(() => {
@@ -33,6 +36,38 @@ export default function FeedPage() {
       console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const translatePost = async (postId: string, content: string) => {
+    setTranslating((prev) => ({ ...prev, [postId]: true }));
+
+    try {
+      const userPreferredLanguage = navigator.language || "en";
+      const response = await fetch("/api/translation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content,
+          targetLanguage: userPreferredLanguage,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.translatedText) {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === postId
+              ? { ...post, content: data.translatedText }
+              : post
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error translating post:", error);
+    } finally {
+      setTranslating((prev) => ({ ...prev, [postId]: false }));
     }
   };
 
@@ -97,6 +132,15 @@ export default function FeedPage() {
                     <p className="text-gray-700 leading-relaxed">
                       {post.content}
                     </p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => translatePost(post.id, post.content)}
+                      disabled={translating[post.id]}
+                      className="hover:text-[#34C759] transition-colors duration-200"
+                    >
+                      {translating[post.id] ? "Translating..." : "Translate"}
+                    </Button>
                   </CardContent>
                   {post.mediaUrl && (
                     <div className="px-6">

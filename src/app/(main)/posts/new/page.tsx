@@ -99,6 +99,22 @@ export default function CreatePost() {
     setIsLoading(true);
 
     try {
+      //   const vulgar = await fetch("/api/vulgar", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({ content }),
+      //   });
+
+      //   const data = await vulgar.json();
+      //   if (data.containsVulgarWords) {
+      //     toast({
+      //       title: "Warning",
+      //       description:
+      //         "Your post contains vulgar words. Please consider removing them.",
+      //       variant: "destructive",
+      //     });
       const token = localStorage.getItem("token");
       const response = await fetch("/api/posts", {
         method: "POST",
@@ -125,10 +141,11 @@ export default function CreatePost() {
           description: "Your post has been successfully created.",
           variant: "default",
         });
-        router.push("/posts");
+        window.location.href = "/posts";
       } else {
         throw new Error("Failed to create post");
       }
+      //   }
     } catch (error) {
       console.log(error);
       toast({
@@ -142,21 +159,24 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-b from-secondary/30 to-background">
+    <div className="h-screen flex items-center justify-center bg-[#003A8B]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-2xl p-6 bg-card rounded-lg shadow-lg"
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-2xl p-8 bg-white rounded-xl shadow-2xl space-y-6"
       >
-        <h1 className="text-2xl font-bold text-center mb-4">Create a Post</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <h1 className="text-3xl font-semibold text-center text-[#003A8B]">
+          Create a Post
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
             <Select
               onValueChange={(value: SetStateAction<string>) =>
                 setCategory(value)
               }
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -167,20 +187,22 @@ export default function CreatePost() {
               </SelectContent>
             </Select>
           </div>
+
           <Textarea
             placeholder="What's on your mind?"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             rows={4}
-            className="w-full resize-none"
+            className="w-full resize-none border rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <div>
+
+          <div className="space-y-2">
             <Select
               onValueChange={(value: SetStateAction<string>) =>
                 setMediaType(value)
               }
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <SelectValue placeholder="Select media type" />
               </SelectTrigger>
               <SelectContent>
@@ -190,24 +212,26 @@ export default function CreatePost() {
               </SelectContent>
             </Select>
           </div>
+
           {mediaType !== "none" && (
             <>
               <Input
                 type="file"
                 accept={mediaType === "image" ? "image/*" : "video/*"}
                 onChange={handleFileChange}
-                className="w-full"
+                className="w-full py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {mediaUrl && (
-                <div className="text-sm text-green-600">
+                <div className="text-sm text-green-600 mt-2">
                   File uploaded successfully!
                 </div>
               )}
             </>
           )}
+
           <Button
             type="submit"
-            className="w-full bg-primary"
+            className="w-full py-3 px-6 bg-[#003A8B] text-white rounded-lg hover:bg-[#005aab] transition duration-300"
             disabled={
               isLoading ||
               !content.trim() ||
