@@ -5,8 +5,30 @@ import { NextResponse } from "next/server";
 import { moderateContent } from "@/lib/ai";
 import { verifyAccessToken } from "@/lib/token";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const authHeader = req.headers.get("Authorization");
+
+    // Validate authorization header
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { message: "Authorization token missing or invalid" },
+        { status: 401 }
+      );
+    }
+
+    // Extract and verify token
+    const token = authHeader.split(" ")[1];
+    const userId = await verifyAccessToken(token);
+
+    if (!userId) {
+      return NextResponse.json(
+        { message: "Invalid or expired token" },
+        { status: 401 }
+      );
+    }
+
+    console.log("Fetching posts...");
     const posts = await prisma.post.findMany({
       include: {
         user: true,
@@ -21,8 +43,8 @@ export async function GET() {
         createdAt: "desc",
       },
     });
-
-    return NextResponse.json(posts);
+    console.log("Posts fetched successfully:", posts);
+    return NextResponse.json(posts, { status: 201 });
   } catch (error) {
     console.error("Error fetching posts:", error);
     return NextResponse.json(
